@@ -5,6 +5,8 @@ from telegram.ext import Updater
 from telegram.ext import CommandHandler
 from telegram import ParseMode
 
+import services_ops
+
 from config import Config
 
 class CaddyBot:
@@ -42,16 +44,18 @@ class CaddyBot:
         self.logger.debug('Finished __init__')
 
     def _test(self, bot, update):
+        result = services_ops.restart_service()
         update.message.reply_text(
-            'Teeeeeest',
+            str(result),
             parse_mode=ParseMode.MARKDOWN)
 
     def start(self):
         if self.WEBHOOKS:
             self.logger.info('Using webhooks configuration...')
             self.updater.start_webhook(listen='127.0.0.1', port=self.PORT, url_path=self.TOKEN)
+            full_cert = open(Config['cert_file'], 'r').read() + '\n' + open(Config['key_file'], 'r').read()
             self.updater.bot.set_webhook(url='https://caddybot.bonny.pw/' + self.TOKEN,
-                                         certificate=open(Config['cert_file'], 'r').read() + '\n' + open(Config['key_file'], 'r').read())
+                                         certificate = full_cert)
             # self.updater.start_webhook(listen='127.0.0.1',
             #                            key=Config['key_file'],
             #                            cert=Config['cert_file'],
