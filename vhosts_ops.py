@@ -9,6 +9,7 @@ def list_vhost_files():
     files = glob.glob(Config['vhosts_files'])
     vhosts = []
     for vhost in files:
+        print(vhost)
         vhost_specs = {}
         with open(vhost, 'r') as opened:
             lines = opened.readlines()
@@ -103,3 +104,6 @@ def load():
         return True
     except:
         return False
+
+
+load()
