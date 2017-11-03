@@ -1,111 +1,54 @@
 import os
-import glob
+import logging
+
+from telegram.ext import Updater
+from telegram.ext import CommandHandler
 
 from config import Config
 
-from models.vhosts import Vhost
+class CaddyBot:
+    ## Restricting decorator
+    def restricted(func):
+        @wraps(func)
+        def wrapped(self, bot, update, *args, **kwargs):
+            logger = logging.getLogger('')
+            user_id = update.effective_user.id
+            if user_id not in Config['Admins']:
+                logger.error("Unauthorized access denied for {}.".format(user_id))
+                return
+            return func(self, bot, update, *args, **kwargs)
+        return wrapped
 
-def list_vhost_files():
-    files = glob.glob(Config['vhosts_files'])
-    vhosts = []
-    for vhost in files:
-        vhost_specs = {}
-        with open(vhost, 'r') as opened:
-            lines = opened.readlines()
-
-
-        ## HOSTS
-        host = lines[0][:-2].strip()
-        secondary_host = None
-        if len(host.split(' ')) > 1:
-            hosts = host.split(' ')
-            host = hosts[0]
-            secondary_host = hosts[1]
-        vhost_specs['host'] = host
-        vhost_specs['secondary_host'] = secondary_host
-
-
-        ## LOCAL ADDRESS
-        local_address = lines[2][:-2].split(':')[0].strip()[8:]
-        vhost_specs['local_address'] = local_address
-
-
-        ## PORT
-        port = lines[2][:-2].split(':')[1].strip()
-        vhost_specs['port'] = port
-        vhosts.append(vhost_specs)
-    return vhosts
-
-def list_vhosts_db():
-    vhosts = []
-    for vhost in Vhost.select():
-        vhost_specs = {
-            'address': vhost.address,
-            'secondary_address': vhost.secondary_address,
-            'internal_ip': vhost.internal_ip,
-            'internal_port': vhost.internal_ip
-        }
-        vhosts.append(vhost_specs)
-    return vhosts
-
-
-def new_vhost(address, secondary_address, internal_ip, internal_port):
-    model = '{host_a} {host_b} {{\n\tgzip\n\tproxy / {ip}:{port} {{\n\t\ttransparent\n\t}}\n}}'
-
-    try:
-        with open(Config['vhosts_path'] + address + '.conf', 'w') as opened:
-            opened.write(model.format(
-            host_a = address,
-            host_b = secondary_address or '',
-            ip = internal_ip,
-            port = internal_port
-            ))
-
-        if address not in [i['address'] for i in list_vhosts_db()]:
-            Vhost.create(
-            address = address,
-            secondary_address = secondary_address,
-            internal_ip = internal_ip,
-            internal_port = internal_port
-            )
+    def __init__(self):
+        ## Get vars from env
+        self.WEBHOOKS = os.getenv('USE_WEBHOOKS', False)
+        self.TOKEN = os.getenv('TG_TOKEN', '')
+        self.PORT = os.getenv('PORT', 5001)
+        self.DEBUG = os.getenv('DEBUG', False)
+        ## Define Updater class
+        self.updater = Updater(token = self.TOKEN)
+        ## Definition of logger
+        self.logger = logging.getLogger('')
+        if self.DEBUG:
+            logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(name)s - %(levelname)s - %(message)s')
         else:
-            vhost = Vhost.get(address = address)
-            vhost.secondary_address = secondary_address
-            vhost.internal_ip = internal_ip
-            vhost.internal_port = internal_port
-            vhost.save()
-        return True
-    except:
-        return False
+            logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(name)s - %(levelname)s - %(message)s')
+        self.logger.debug('Finished __init__')
 
-
-def delete_vhost(address):
-    try:
-        vhost = Vhost.get(Vhost.address == address)
-        vhost.delete_instance()
-        os.remove(Config['vhosts_path'] + address + '.conf')
-        return True
-    except Exception as e:
-        print(e)
-        return False
-
-
-def load():
-    for vhost in list_vhost_files():
-        if vhost['host'] not in [i['address'] for i in list_vhosts_db()]:
-            Vhost.create(
-            address = vhost['host'],
-            secondary_address = vhost['secondary_host'],
-            internal_ip = vhost['local_address'],
-            internal_port = vhost['port']
-            )
-
-
+    def start(self):
+        if self.WEBHOOKS:
+            self.logger.info('Using webhooks configuration...')
+            self.updater.start_webhook(listen='127.0.0.1',
+                                       key=Config['key_file'],
+                                       cert=Config['cert_file'],
+                                       webhook_url='https://caddybot.bonny.pw/'+self.TOKEN,
+                                       port=self.PORT,
+                                       url_path=self.TOKEN)
+        else:
+            self.logger.info('Using polling configuration...')
+            self.updater.start_polling()
+        self.updater.idle()
 
 if __name__ == '__main__':
-    load()
-    new_vhost(
-        'dio.bonny.pw', None, '127.0.0.1', '999'
-    )
-    input('Premere tasto per cancellare')
-    delete_vhost('dio.bonny.pw')
+    bot = CaddyBot()
+    bot.start()
