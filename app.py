@@ -36,7 +36,7 @@ class CaddyBot:
             logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(name)s - %(levelname)s - %(message)s')
         ## Definition of commands
         test_handler = CommandHandler('test', self._test)
-        self.dispatcher.add_handler(create_handler)
+        self.dispatcher.add_handler(test_handler)
         self.logger.debug('Finished __init__')
 
     def _test(self, bot, update):
