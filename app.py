@@ -3,6 +3,7 @@ import logging
 
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
+from telegram import ParseMode
 
 from config import Config
 
