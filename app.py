@@ -25,8 +25,9 @@ class CaddyBot:
         self.TOKEN = os.getenv('TG_TOKEN', '')
         self.PORT = os.getenv('PORT', 5001)
         self.DEBUG = os.getenv('DEBUG', False)
-        ## Define Updater class
+        ## Define Updater class and dispatcher object
         self.updater = Updater(token = self.TOKEN)
+        self.dispatcher = self.updater.dispatcher
         ## Definition of logger
         self.logger = logging.getLogger('')
         if self.DEBUG:
