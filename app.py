@@ -25,6 +25,7 @@ class CaddyBot:
         self.TOKEN = os.getenv('TG_TOKEN', '')
         self.PORT = os.getenv('PORT', 5001)
         self.DEBUG = os.getenv('DEBUG', False)
+        print('Webhooks: {}\nToken: {}\nPort: {}\nDebug: {}'.format(self.WEBHOOKS, self.TOKEN, self.PORT, self.DEBUG))
         ## Define Updater class and dispatcher object
         self.updater = Updater(token = self.TOKEN)
         self.dispatcher = self.updater.dispatcher
