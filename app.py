@@ -48,15 +48,15 @@ class CaddyBot:
     def start(self):
         if self.WEBHOOKS:
             self.logger.info('Using webhooks configuration...')
-            self.updater.start_webhook(listen='127.0.0.1', port=self.PORT, url_path=self.TOKEN)
-            self.updater.bot.set_webhook(url='https://caddybot.bonny.pw/' + self.TOKEN,
-                                         certificate=open(Config['cert_file'], 'rb'))
-            # self.updater.start_webhook(listen='127.0.0.1',
-            #                            key=Config['key_file'],
-            #                            cert=Config['cert_file'],
-            #                            webhook_url='https://caddybot.bonny.pw/'+self.TOKEN,
-            #                            port=self.PORT,
-            #                            url_path=self.TOKEN)
+            # self.updater.start_webhook(listen='127.0.0.1', port=self.PORT, url_path=self.TOKEN)
+            # self.updater.bot.set_webhook(url='https://caddybot.bonny.pw/' + self.TOKEN,
+            #                              certificate=open(Config['cert_file'], 'rb'))
+            self.updater.start_webhook(listen='127.0.0.1',
+                                       key=Config['key_file'],
+                                       cert=Config['cert_file'],
+                                       url='https://caddybot.bonny.pw/' + self.TOKEN,
+                                       port=self.PORT,
+                                       url_path=self.TOKEN)
         else:
             self.logger.info('Using polling configuration...')
             self.updater.start_polling()
