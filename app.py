@@ -50,7 +50,7 @@ class CaddyBot:
             self.logger.info('Using webhooks configuration...')
             self.updater.start_webhook(listen='127.0.0.1', port=self.PORT, url_path=self.TOKEN)
             self.updater.bot.set_webhook(url='https://caddybot.bonny.pw/' + self.TOKEN,
-                                         certificate=open(Config['cert_file'], 'r').read() + '\n' + open(Config['cert_key'], 'r').read())
+                                         certificate=open(Config['cert_file'], 'r').read() + '\n' + open(Config['key_file'], 'r').read())
             # self.updater.start_webhook(listen='127.0.0.1',
             #                            key=Config['key_file'],
             #                            cert=Config['cert_file'],
