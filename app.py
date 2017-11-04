@@ -113,9 +113,10 @@ class CaddyBot:
         port = str(update.message.text).strip()
         CaddyBot.new_vhost_port = port
         reply_keyboard = [['Si'], ['No']]
-        message = '''Confermi di voler creare un nuovo vhost con url *{url}* riferito alla porta *{port}*?
-                     Nota che se non hai ancora creato il dominio sul provider Caddy non funzionerà'''.format(url=CaddyBot.new_vhost_url,
-                                                                                                              port=CaddyBot.new_vhost_port)
+        message = '''
+        Confermi di voler creare un nuovo vhost con url *{url}* riferito alla porta *{port}*?
+        Nota che se non hai ancora creato il dominio sul provider Caddy non funzionerà
+        '''.format(url=CaddyBot.new_vhost_url,port=CaddyBot.new_vhost_port)
         update.message.reply_text(
                 message,
                 reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True),
