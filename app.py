@@ -7,6 +7,7 @@ from telegram.ext import Updater
 from telegram.ext import CommandHandler
 from telegram.ext import ConversationHandler
 from telegram.ext import MessageHandler
+from telegram.ext import RegexHandler
 from telegram.ext import Filters
 from telegram import ParseMode
 
