@@ -76,6 +76,7 @@ class CaddyBot:
         else:
             self.logger.info('Using polling configuration...')
             self.updater.start_polling()
+        vhosts_ops.load()
         self.updater.idle()
 
     ## Commands !! IMPORTANT !! Try to find a way to separate that shit
