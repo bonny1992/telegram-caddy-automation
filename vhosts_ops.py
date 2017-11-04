@@ -49,7 +49,7 @@ def list_vhosts_db():
     return vhosts
 
 
-def new_vhost(address, secondary_address, internal_ip, internal_port):
+def new_vhost(address, secondary_address = None, internal_ip = '127.0.0.1', internal_port):
     model = '{host_a} {host_b} {{\n\tgzip\n\tproxy / {ip}:{port} {{\n\t\ttransparent\n\t}}\n}}'
 
     try:
