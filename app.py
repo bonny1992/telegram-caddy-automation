@@ -13,6 +13,7 @@ from telegram.ext import MessageHandler
 from telegram.ext import RegexHandler
 from telegram.ext import Filters
 
+import vhosts_ops
 import services_ops
 
 from config import Config
