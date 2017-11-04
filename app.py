@@ -75,7 +75,7 @@ class CaddyBot:
         self.updater.idle()
 
     ## Commands !! IMPORTANT !! Try to find a way to separate that shit
-    def new():
+    def new(self):
         new_handler = ConversationHandler(
             entry_points = [CommandHandler('new', self._new)],
             states = {
