@@ -121,6 +121,7 @@ class CaddyBot:
         self.logger.info({'new-vhost': CaddyBot.new_vhost_url, 'port': CaddyBot.new_vhost_port})
         try:
             vhosts_ops.new_vhost(address = CaddyBot.new_vhost_url, internal_port = CaddyBot.new_vhost_port)
+            services_ops.restart_service()
             message = 'Vhost {} = {}:{} creato!'.format(CaddyBot.new_vhost_url, '127.0.0.1', CaddyBot.new_vhost_port)
             bot.send_message(chat_id=update.message.chat_id, text=message, parse_mode=ParseMode.MARKDOWN)
         except:
