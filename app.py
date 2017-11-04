@@ -124,16 +124,15 @@ class CaddyBot:
 
     def _create_new_vhost(self, bot, update):
         self.logger.info({'new-vhost': CaddyBot.new_vhost_url, 'port': CaddyBot.new_vhost_port})
-        try:
-            vhosts_ops.new_vhost(address = CaddyBot.new_vhost_url, internal_port = CaddyBot.new_vhost_port)
+        vhost_creation = vhosts_ops.new_vhost(address = CaddyBot.new_vhost_url, internal_port = CaddyBot.new_vhost_port)
+        if vhost_creation:
             services_ops.restart_service()
             message = 'Vhost {} = {}:{} creato!'.format(CaddyBot.new_vhost_url, '127.0.0.1', CaddyBot.new_vhost_port)
             bot.send_message(chat_id=update.message.chat_id, text=message, parse_mode=ParseMode.MARKDOWN)
-        except:
+        else:
             message = 'Vhost {} = {}:{} *non* creato!\nPrego controllare logs!'.format(CaddyBot.new_vhost_url, '127.0.0.1', CaddyBot.new_vhost_port)
             bot.send_message(chat_id=update.message.chat_id, text=message, parse_mode=ParseMode.MARKDOWN)
-        finally:
-            return ConversationHandler.END
+        return ConversationHandler.END
 
     def _new_cancel(self, bot, update):
         reply_markup = ReplyKeyboardRemove()
