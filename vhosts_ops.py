@@ -1,9 +1,12 @@
 import os
 import glob
+import logging
 
 from config import Config
 
 from models.vhosts import Vhost
+
+logger = logging.getLogger('')
 
 def list_vhost_files():
     files = glob.glob(Config['vhosts_files'])
@@ -75,7 +78,8 @@ def new_vhost(address, secondary_address = None, internal_ip = '127.0.0.1', inte
             vhost.internal_port = internal_port
             vhost.save()
         return True
-    except:
+    except Exception as e:
+        logger.error(e)
         return False
 
 
