@@ -82,7 +82,7 @@ class CaddyBot:
                 CONFIRM_HOST_NEW: [RegexHandler('^(Si)$', self._create_new_vhost),
                                    RegexHandler('^(No)$', self._new_cancel),]
             },
-            fallbacks = [CommandHandler('cancel', self._new_cancel)]
+            fallbacks = [CommandHandler('cancel', self._new_cancel)])
         return new_handler
 
 
