@@ -149,7 +149,7 @@ class CaddyBot:
     @restricted
     def _list(self, bot, update):
         self.logger.info('Vhost list view started by {id}'.format(id=update.effective_user.id))
-        vhosts = vhost_ops.list_vhosts_db()
+        vhosts = vhosts_ops.list_vhosts_db()
         message = 'Ecco i vhost al momento attivi:\n{}'.format('\n'.join(vhosts))[:-1]
         bot.send_message(chat_id=update.message.chat_id, text=message, parse_mode=ParseMode.MARKDOWN)
 
