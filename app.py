@@ -150,7 +150,10 @@ class CaddyBot:
     def _list(self, bot, update):
         self.logger.info('Vhost list view started by {id}'.format(id=update.effective_user.id))
         vhosts = vhosts_ops.list_vhosts_db()
-        message = 'Ecco i vhost al momento attivi:\n{}'.format('\n'.join(vhosts))[:-1]
+        formatted_vhosts = []
+        for vhost in vhosts:
+            formatted_vhosts.append('{} puntante a {}:{} con un indirizzo secondario {}'.format(vhost['address'],vhost['internal_ip'],vhost['internal_port'], vhost['secondary_address']))
+        message = 'Ecco i vhost al momento attivi:\n{}'.format('\n'.join(formatted_vhosts))[:-1]
         bot.send_message(chat_id=update.message.chat_id, text=message, parse_mode=ParseMode.MARKDOWN)
 
 
