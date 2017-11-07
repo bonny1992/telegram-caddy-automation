@@ -104,7 +104,6 @@ def load():
                 internal_ip = vhost['local_address'],
                 internal_port = vhost['port']
                 )
-            print()
         return True
     except:
         return False
