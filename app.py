@@ -51,14 +51,10 @@ class CaddyBot:
             logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(name)s - %(levelname)s - %(message)s')
         ## Definition of commands
         new_vhost_handler = self.new()
+        list_vhost_handler = self.list()
         self.dispatcher.add_handler(new_vhost_handler)
+        self.dispatcher.add_handler(list_vhost_handler)
         self.logger.debug('Finished __init__')
-
-    def _test(self, bot, update):
-        result = services_ops.restart_service()
-        update.message.reply_text(
-            str(result),
-            parse_mode=ParseMode.MARKDOWN)
 
     def start(self):
         if self.WEBHOOKS:
@@ -146,8 +142,12 @@ class CaddyBot:
             reply_markup=reply_markup)
         return ConversationHandler.END
 
+    def list(self):
+        handler = CommandHandler('list', self._list)
+        return handler
+
     @restricted
-    def list(self, bot, update):
+    def _list(self, bot, update):
         self.logger.info('Vhost list view started by {id}'.format(id=update.effective_user.id))
         vhosts = vhost_ops.list_vhosts_db()
         message = 'Ecco i vhost al momento attivi:\n{}'.format('\n'.join(vhosts))[:-1]
