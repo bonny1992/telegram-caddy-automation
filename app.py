@@ -148,16 +148,19 @@ class CaddyBot:
 
     @restricted
     def _list(self, bot, update):
-        self.logger.info('Vhost list view started by {id}'.format(id=update.effective_user.id))
-        vhosts = vhosts_ops.list_vhosts_db()
-        formatted_vhosts = []
-        for vhost in vhosts:
-            if vhost['secondary_address'] != None:
-                formatted_vhosts.append('`{},{}` => `{}:{}`'.format(vhost['address'], vhost['secondary_address'], vhost['internal_ip'], vhost['internal_port']))
-            else:
-                formatted_vhosts.append('`{}` => `{}:{}`'.format(vhost['address'], vhost['internal_ip'], vhost['internal_port']))
-        message = 'Ecco i vhost al momento attivi:\n{}'.format('\n'.join(formatted_vhosts))[:-1]
-        bot.send_message(chat_id=update.message.chat_id, text=message, parse_mode=ParseMode.MARKDOWN)
+        try:
+            self.logger.info('Vhost list view started by {id}'.format(id=update.effective_user.id))
+            vhosts = vhosts_ops.list_vhosts_db()
+            formatted_vhosts = []
+            for vhost in vhosts:
+                if vhost['secondary_address'] != None:
+                    formatted_vhosts.append('`{},{}` => `{}:{}`'.format(vhost['address'], vhost['secondary_address'], vhost['internal_ip'], vhost['internal_port']))
+                else:
+                    formatted_vhosts.append('`{}` => `{}:{}`'.format(vhost['address'], vhost['internal_ip'], vhost['internal_port']))
+            message = 'Ecco i vhost al momento attivi:\n{}'.format('\n'.join(formatted_vhosts))
+            bot.send_message(chat_id=update.message.chat_id, text=message, parse_mode=ParseMode.MARKDOWN)
+        except Exception as e:
+            bot.send_message(chat_id=update.message.chat_id, text=str(e), parse_mode=ParseMode.MARKDOWN)
 
 
 if __name__ == '__main__':
