@@ -152,8 +152,10 @@ class CaddyBot:
         vhosts = vhosts_ops.list_vhosts_db()
         formatted_vhosts = []
         for vhost in vhosts:
-            self.logger.info(vhost)
-            formatted_vhosts.append('{},{} => {}:{}'.format(vhost['address'], vhost['secondary_address'], vhost['internal_ip'], vhost['internal_port']))
+            if vhost['secondary_address'] != None:
+                formatted_vhosts.append('{},{} => {}:{}'.format(vhost['address'], vhost['secondary_address'], vhost['internal_ip'], vhost['internal_port']))
+            else:
+                formatted_vhosts.append('{} => {}:{}'.format(vhost['address'], vhost['internal_ip'], vhost['internal_port']))
         message = 'Ecco i vhost al momento attivi:\n{}'.format('\n'.join(formatted_vhosts))[:-1]
         bot.send_message(chat_id=update.message.chat_id, text=message, parse_mode=ParseMode.MARKDOWN)
 
