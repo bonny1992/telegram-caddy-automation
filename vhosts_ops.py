@@ -46,7 +46,7 @@ def list_vhosts_db():
             'address': vhost.address,
             'secondary_address': vhost.secondary_address,
             'internal_ip': vhost.internal_ip,
-            'internal_port': vhost.internal_ip
+            'internal_port': vhost.internal_port
         }
         vhosts.append(vhost_specs)
     return vhosts
@@ -104,6 +104,7 @@ def load():
                 internal_ip = vhost['local_address'],
                 internal_port = vhost['port']
                 )
+            print()
         return True
     except:
         return False
