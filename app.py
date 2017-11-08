@@ -169,7 +169,13 @@ class CaddyBot:
             status = services_ops.get_service()
             self.logger.info(status)
             if status != False:
-                message = 'Lo stato del servizio *Caddy* è `{}`'.format(status)
+                if status[1] == 4:
+                    stato = 'In esecuzione'
+                elif status[1] == 1:
+                    stato = 'Fermato'
+                else:
+                    stato = 'Non disponibile'
+                message = 'Lo stato del servizio *Caddy* è `{}`'.format(stato)
             else:
                 message = 'Non è stato possibile ottenere lo stato del servizio *Caddy*'
             bot.send_message(chat_id=update.message.chat_id, text=message, parse_mode=ParseMode.MARKDOWN)
