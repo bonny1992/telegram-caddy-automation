@@ -165,7 +165,7 @@ class CaddyBot:
     @restricted
     def _get_status(self, bot, update):
         try:
-            status = services_ops.get_service()
+            status = services_ops.get_service(servicename='FileZilla Server')
             if status != False:
                 message = 'Lo stato del servizio *Caddy* è `{}`'.format(status)
             else:
