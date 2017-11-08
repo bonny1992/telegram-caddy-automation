@@ -162,6 +162,19 @@ class CaddyBot:
         except Exception as e:
             bot.send_message(chat_id=update.message.chat_id, text=str(e), parse_mode=ParseMode.MARKDOWN)
 
+    def get_status(self):
+        handler = CommandHandler('status', self._get_status)
+
+    def _get_status(self, bot, update):
+        try:
+            status = services_ops.get_service()
+            if status != False:
+                message = 'Lo stato del servizio *Caddy* è `{}`'.format(status)
+            else:
+                message = 'Non è stato possibile ottenere lo stato del servizio *Caddy*'
+            bot.send_message(chat_id=update.message.chat_id, text=message, parse_mode=ParseMode.MARKDOWN)
+        except Exception as e:
+            bot.send_message(chat_id=update.message.chat_id, text=str(e), parse_mode=ParseMode.MARKDOWN)
 
 if __name__ == '__main__':
     bot = CaddyBot()

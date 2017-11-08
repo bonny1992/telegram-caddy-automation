@@ -20,3 +20,10 @@ def start_service(servicename = 'Caddy'):
         return True
     except:
         return False
+
+def get_service(servicename = 'Caddy'):
+    try:
+        status = win32serviceutil.QueryServiceStatus(servicename)
+        return status
+    except:
+        return False
