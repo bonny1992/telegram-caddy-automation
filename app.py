@@ -160,6 +160,7 @@ class CaddyBot:
 
     def get_status(self):
         handler = CommandHandler('status', self._get_status)
+        return handler
 
     @restricted
     def _get_status(self, bot, update):
