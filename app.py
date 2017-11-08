@@ -52,8 +52,10 @@ class CaddyBot:
         ## Definition of commands
         new_vhost_handler = self.new()
         list_vhost_handler = self.list()
+        status_service_handler = self.get_status()
         self.dispatcher.add_handler(new_vhost_handler)
         self.dispatcher.add_handler(list_vhost_handler)
+        self.dispatcher.add_handler(status_service_handler)
         self.logger.debug('Finished __init__')
 
     def start(self):
@@ -63,12 +65,6 @@ class CaddyBot:
             full_cert = open(Config['cert_file'], 'r').read() + '\n' + open(Config['key_file'], 'r').read()
             self.updater.bot.set_webhook(url='https://caddybot.bonny.pw/' + self.TOKEN,
                                          certificate = full_cert)
-            # self.updater.start_webhook(listen='127.0.0.1',
-            #                            key=Config['key_file'],
-            #                            cert=Config['cert_file'],
-            #                            webhook_url='https://caddybot.bonny.pw/' + self.TOKEN,
-            #                            port=self.PORT,
-            #                            url_path=self.TOKEN)
         else:
             self.logger.info('Using polling configuration...')
             self.updater.start_polling()
@@ -165,6 +161,7 @@ class CaddyBot:
     def get_status(self):
         handler = CommandHandler('status', self._get_status)
 
+    @restricted
     def _get_status(self, bot, update):
         try:
             status = services_ops.get_service()
