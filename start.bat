@@ -1,5 +1,5 @@
 set TG_TOKEN=389735430:AAEDf4sxO-G7d6RRlo6NJR4foHA9gFI3om4
 set DEBUG=
-set USE_WEBHOOKS=True
+set USE_WEBHOOKS=False
 cls
 env\Scripts\python app.py
