@@ -167,7 +167,6 @@ class CaddyBot:
         try:
             self.logger.info('Service status view started by {id}'.format(id=update.effective_user.id))
             status = services_ops.get_service()
-            self.logger.info(status)
             if status != False:
                 if status[1] == 4:
                     stato = 'In esecuzione'
